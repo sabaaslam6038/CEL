@@ -105,7 +105,7 @@ def plottingVoilin():
 
 
 ######################### MAIN  #########################
-df=pd.read_csv('africa_mpox_data.csv')
+df=pd.read_csv('data_file')
 for i in range(1,8):
     df[f'value_lag_{i}']= df['value'].shift(i)
 df.dropna(inplace=True)
