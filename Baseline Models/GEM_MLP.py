@@ -48,7 +48,7 @@ class MLP(nn.Module):
         return x.squeeze()  # This line flattens the output to have shape (batch_size)
 
 
-input_dim = 7  # assuming  12 features
+input_dim = 7  
 hidden_dim = 32
 output_dim = 1
 batch_size = 32
@@ -76,7 +76,7 @@ def load_data(task_data, test_size=0.2):
     return DataLoader(MyDataset(X_train, y_train), batch_size=batch_size, shuffle=True), DataLoader(
         MyDataset(X_test, y_test), batch_size=batch_size, shuffle=False)
 
-df = pd.read_csv('us_infleunza_output.csv')
+df = pd.read_csv('data_file')
 num_tasks = 10
 all_tasks = train_test_split_tasks(df, num_tasks)
 all_data = [(load_data(task)) for task in all_tasks]
@@ -107,8 +107,7 @@ class GEMMemory:
         return self.memory_data[indices], self.memory_targets[indices]
 
 
-# GEM loss
-# GEM loss
+#gem_loss
 def gem_loss(predictions, targets, model, memory, margin=0.5):
     base_loss = criterion(predictions.squeeze(), targets)
     penalty = 0
@@ -128,11 +127,7 @@ def gem_loss(predictions, targets, model, memory, margin=0.5):
     mem_targets = mem_targets.squeeze()
     targets = targets.squeeze()
 
-    # Print the shapes of the tensors
-    # print("past_task_output shape:", past_task_output.shape)
-    # print("mem_targets shape:", mem_targets.shape)
-    # print("current_task_output shape:", current_task_output.shape)
-    # print("targets shape:", targets.shape)
+
 
     penalty += torch.dot(past_task_output - mem_targets, current_task_output - targets).clamp(min=0)
     return base_loss + margin * penalty
@@ -216,21 +211,6 @@ memory_stability_rmse = 1 - np.mean(np.abs(forgetting_rmse))
 print(f'Memory stability for R-squared: {memory_stability_r2}')
 #print(f'Memory stability for RMSE: {memory_stability_rmse}')
 
-##########
-# Create a DataFrame
-df_results = pd.DataFrame({
-    'Task': [f'Task {i+1}' for i in range(num_tasks)],
-    'Initial R2 Score': r2_scores,
-    'Final R2 Score': r2_final_list,
-    'Forgetting R2': forgetting_r2
-})
-df_results = df_results.set_index('Task').transpose()
-
-# Add memory stability to the DataFrame
-df_results['Memory Stability'] = memory_stability_r2
-
-# Save the DataFrame to a CSV file
-df_results.to_csv('GEM_Mpox.csv', index=False)
 # R2_Score
 plt.figure(figsize=(12, 6))
 plt.plot(r2_scores, label='R2 Score')
