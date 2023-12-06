@@ -10,8 +10,6 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
-#import seaborn as sns
-#sns.set_style("whitegrid")
 import csv
 from mystyle import *
 class MyDataset(Dataset):
@@ -81,7 +79,7 @@ rmse_scores = []
 forgetting_r2 = []
 forgetting_rmse = []
 
-df = pd.read_csv('africa_mpox_output.csv')
+df = pd.read_csv('data_file')
 all_tasks = train_test_split_tasks(df, num_tasks)
 all_data = [(load_data(task)) for task in all_tasks]
 
@@ -114,15 +112,6 @@ for task, (train_data, test_data) in enumerate(all_data):
     #print(f'RMSE for task {task + 1}: {rmse_scores[-1]}')
     stored_performances.append((r2_scores[-1], rmse_scores[-1]))
 
-    # # New code for plotting each task seperately
-    # plt.figure(figsize=(10, 5))
-    # plt.plot(actuals, label='Actual values')
-    # plt.plot(predictions, label='Predicted values')
-    # plt.title(f'Actual vs Predicted values for task {task + 1}')
-    # plt.legend()
-    # plt.show()
-
-
 
 # After all tasks, re-evaluate performance on all tasks
 final_performances = []
@@ -147,7 +136,6 @@ for task, (train_data, test_data) in enumerate(all_data):  # Unpack the tuple he
     #print(f'Final RMSE for task {task + 1}: {rmse_final}')
     final_performances.append((r2_final, rmse_final))
 
-# ... (rest of the code for forgetting and memory stability)
 
 
 # Compute forgetting
@@ -163,41 +151,5 @@ memory_stability_rmse = 1 - np.mean(np.abs(forgetting_rmse))
 print(f'Memory stability for R-squared: {memory_stability_r2}')
 #print(f'Memory stability for RMSE: {memory_stability_rmse}')
 
-# #########################     Generateting CSV File   ########################
-##########
-# Create a DataFrame
-df_results = pd.DataFrame({
-    'Task': [f'Task {i+1}' for i in range(num_tasks)],
-    'Initial R2 Score': r2_scores,
-    'Final R2 Score': r2_final_list,
-    'Forgetting R2': forgetting_r2
-})
-df_results = df_results.set_index('Task').transpose()
 
-# Add memory stability to the DataFrame
-df_results['Memory Stability'] = memory_stability_r2
-
-# Save the DataFrame to a CSV file
-df_results.to_csv('XDG_CSV', index=False)
-
-#
-# # R2_Score
-# plt.figure(figsize=(10, 6))
-# plt.plot(r2_scores)
-# #plt.plot(r2_final)
-# plt.xlabel('Tasks')
-# plt.ylabel('Value')
-# plt.legend()
-# plt.title('R2 Score')
-# plt.show()
-
-# # RMSE
-# plt.figure(figsize=(10, 6))
-# plt.plot(rmse_scores, label='RMSE')
-# plt.xlabel('Tasks')
-# plt.ylabel('Value')
-# plt.legend()
-# plt.title('RMSE')
-# plt.show()
-# ######
 
