@@ -42,7 +42,7 @@ class LSTM(nn.Module):
         lstm_out, _ = self.lstm(x.view(len(x), 1, -1))
         predictions = self.linear(lstm_out.view(len(x), -1))
 
-input_dim = 7  # assuming  12 features
+input_dim = 7  
 hidden_dim = 32
 output_dim = 1
 batch_size = 32
@@ -67,7 +67,7 @@ def load_data(task_data, test_size=0.2):
     return DataLoader(MyDataset(X_train, y_train), batch_size=batch_size, shuffle=True), DataLoader(
         MyDataset(X_test, y_test), batch_size=batch_size, shuffle=False)
 
-df = pd.read_csv('us_infleunza_output.csv')
+df = pd.read_csv('data_file')
 num_tasks = 10
 all_tasks = train_test_split_tasks(df, num_tasks)
 all_data = [(load_data(task)) for task in all_tasks]
@@ -146,11 +146,7 @@ for task, (train_data, test_data) in enumerate(all_data):
             r2 = r2_score(actuals, predictions)
             r2_scores.append(r2)
             stored_performances.append(r2)
-#
-# # Save model and memory data
-# model.save_weights('model_weights.h5')
-# np.save('memory_input.npy', memory.input_variables)
-# np.save('memory_output.npy', memory.output_variables)
+
 
 # Calculate R-squared after training
 final_performances = []
