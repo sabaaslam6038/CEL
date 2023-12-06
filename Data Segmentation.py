@@ -125,7 +125,7 @@ ewc_lambda = 10
 num_tasks = 10
 
 # Now reading the OUTPUT data
-df = pd.read_csv('africa_mpox_output.csv')
+df = pd.read_csv('data_file.csv')
 
 task_info_df = pd.DataFrame(columns=["Task", "Count", "Mean", "Std", "Min", "25%", "50%", "75%", "Max", "Start Date", "End Date", "Number of Days"])
 all_tasks = train_test_split_tasks(df, num_tasks)
